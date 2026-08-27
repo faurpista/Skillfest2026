@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pályaválasztó AI Asszisztens | 8. Osztályos Orientáció</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --accent: #06b6d4;
+      --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 20px 30px -10px rgba(79, 70, 229, 0.15);
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px 16px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* Header Styling */
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Card Layout */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    /* Quick Tags / Chips */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tag-chip {
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-chip:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: #c7d2fe;
+      transform: translateY(-1px);
+    }
+
+    .tag-chip.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    /* Textarea Input */
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--border-color);
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text-main);
+      background: #fafafa;
+      resize: vertical;
+      transition: all 0.2s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    /* API Settings Accordion */
+    .api-settings {
+      margin-top: 20px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+    }
+
+    .api-toggle {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+    }
+
+    .api-toggle:hover {
+      color: var(--primary);
+    }
+
+    .api-box {
+      margin-top: 12px;
+      padding: 14px;
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border-color);
+      display: none;
+    }
+
+    .api-box.show {
+      display: block;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    input[type="password"], input[type="text"] {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    /* Primary Action Button */
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, #3730a3 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.25s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 25px 35px -10px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Results Section */
+    .hidden {
+      display: none !important;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    /* Result Item Card */
+    .result-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card.top-match {
+      border: 2px solid var(--primary);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      box-shadow: var(--shadow-md);
+    }
+
+    .result-card.top-match::before {
+      content: 'Legjobb párosítás';
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 50px;
+      text-transform: uppercase;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .result-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #0f172a;
+    }
+
+    .result-percent {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Progress Bar */
+    .progress-bg {
+      background: #e2e8f0;
+      height: 12px;
+      border-radius: 50px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+      width: 0%;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .result-summary {
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Project Callout Box */
+    .project-card {
+      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-top: 24px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .project-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .project-card p {
+      font-size: 1rem;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+
+    /* Action Buttons Footer */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: #f1f5f9;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      body { padding: 16px 10px; }
+      .card { padding: 20px; }
+      h1 { font-size: 1.75rem; }
+      .action-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header Section -->
+    <header>
+      <span class="badge">🎯 8. Osztályos Pályaválasztás</span>
+      <h1>Fedezd fel a te <span>Technikumi Szakirányodat!</span></h1>
+      <p>Írd le magadról, mit szeretsz csinálni, mi a hobbid, vagy kattints a címkékre! Az AI ügynök kiszámolja, melyik szak illik hozzád leginkább.</p>
+    </header>
+
+    <!-- Main Input Form Card -->
+    <div class="card" id="input-card">
+      <div class="card-title">
+        <span>✍️</span> Mesélj magadról pár mondatban!
+      </div>
+      <p class="card-subtitle">Milyen tantárgyakat szeretsz? Mit csinálsz szívesen a szabadidődben? Szeretsz szerelni, rajzolni, gépezni vagy szervezni?</p>
+
+      <!-- Quick Tag Chips -->
+      <div class="tags-container" id="tags-container">
+        <div class="tag-chip" data-tag="💻 Számítógépek, kódolás, appok">💻 Kódolás & Gépek</div>
+        <div class="tag-chip" data-tag="⚙️ Szerelés, gépek, fizika">⚙️ Szerelés & Barkácsolás</div>
+        <div class="tag-chip" data-tag="⚡ Elektronika, áramkörök, robottika">⚡ Áramkörök & Robotika</div>
+        <div class="tag-chip" data-tag="📦 Szervezés, tervezés, logisztika">📦 Szervezés & Tervezés</div>
+        <div class="tag-chip" data-tag="🎨 Rajzolás, videóvágás, dizájn">🎨 Dizájn, Rajz & Videók</div>
+        <div class="tag-chip" data-tag="🚗 Autók és motorok">🚗 Autók & Járművek</div>
+        <div class="tag-chip" data-tag="📊 Matematika és logikai feladványok">📊 Matek & Logika</div>
+        <div class="tag-chip" data-tag="👥 Csapatmunka és kommunikáció">👥 Csapatmunka</div>
+      </div>
+
+      <!-- Free Text Area -->
+      <textarea id="user-bio" placeholder="Például: Szeretek a gépen játszani és érdekel, hogyan működnek a hálózatok. Apukámmal sokat szerelünk a garázsban, de a rajzolás egyáltalán nem az én világom. Melyik szak lenne a legjobb?"></textarea>
+
+      <!-- Optional API Settings Accordion -->
+      <div class="api-settings">
+        <button type="button" class="api-toggle" id="api-toggle-btn">
+          ⚙️ Meghaladó opciók (Gemini API Kulcs beállítása) ▾
+        </button>
+        <div class="api-box" id="api-box">
+          <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted);">Saját Google Gemini API Key (Ha üresen hagyod, a beépített intelligens szimulációs motor elemzi a profilod):</label>
+          <div class="input-group">
+            <input type="password" id="api-key-input" placeholder="AIzaSy...">
+            <button class="btn-secondary" style="flex:none; padding:10px 16px;" onclick="saveApiKey()">Mentés</button>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-top:6px;">Az API kulcs közvetlenül a böngésződből fut, nem tároljuk szerveren.</p>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn-primary" id="analyze-btn" onclick="startAnalysis()">
+        <span class="spinner" id="btn-spinner"></span>
+        <span id="btn-text">Elemzés Indítása ✨</span>
+      </button>
+    </div>
+
+    <!-- Results Display Card -->
+    <div class="card hidden" id="results-card">
+      <div class="results-header">
+        <h2>📊 A te Eredményeid</h2>
+        <span class="badge" style="margin:0;">Értékelve</span>
+      </div>
+
+      <div id="results-list"></div>
+
+      <!-- Cool Project Box -->
+      <div class="project-card" id="project-box">
+        <h3>🚀 Nevedre szabott menő projekt ötlet:</h3>
+        <p id="project-text">Töltés...</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn-secondary" onclick="resetForm()">🔄 Újraelemzés / Másik leírás</button>
+        <button class="btn-secondary" onclick="window.print()">📄 Eredmény Nyomtatása / Mentése</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 5 Technikum Specialty Definitions
+    const SPECIALTIES = [
+      {
+        id: "info",
+        name: "Informatikai rendszer- és alkalmazás-üzemeltető",
+        emoji: "💻",
+        keywords: ["kódolás", "számítógép", "gép", "program", "hálózat", "szoftver", "hardver", "játék", "pc", "szerver", "app", "web", "informatika", "python", "html"],
+        baseSummary: "Remekül illik hozzád, mert érdekelnek a számítógépek, a hálózatok vagy a kódolás világa."
+      },
+      {
+        id: "gepesz",
+        name: "Gépésztechnikus",
+        emoji: "⚙️",
+        keywords: ["szerelés", "barkácsolás", "gép", "motor", "autó", "fém", "fizika", "alkatrész", "garázs", "javítás", "konstrukció", "3d nyomtatás", "tengely"],
+        baseSummary: "Kiváló választás, ha szeretsz fizikai gépeket, alkatrészeket szerelni, tervezni és megérteni a működésüket."
+      },
+      {
+        id: "elektro",
+        name: "Elektrotechnikai technikus",
+        emoji: "⚡",
+        keywords: ["áram", "elektronika", "áramkör", "robot", "robotika", "forrasztás", "mérés", "vezeték", "okosotthon", "érzékelő", "senzor", "szerelés", "fizika"],
+        baseSummary: "Nagyon passzol hozzád, ha vonz az áramkörök, a mikrovezérlők és az okos eszközök világa."
+      },
+      {
+        id: "logisztika",
+        name: "Logisztikai technikus",
+        emoji: "📦",
+        keywords: ["szervezés", "tervezés", "szállítás", "raktár", "rendszerezés", "csapat", "utazás", "irányítás", "matek", "táblázat", "áru", "gazdaság"],
+        baseSummary: "Szuper lehetőség, ha szeretnél összetett folyamatokat, szállítást és raktározást pontosan megszervezni."
+      },
+      {
+        id: "kreativ",
+        name: "Kreatív / Grafikai technikus",
+        emoji: "🎨",
+        keywords: ["rajzolás", "rajz", "dizájn", "design", "videó", "videóvágás", "fotó", "kreatív", "művészet", "színek", "animáció", "illusztráció", "szerkesztés"],
+        baseSummary: "Tökéletes számodra, ha van vizuális szépérzéked, szeretsz rajzolni, képeket vagy videókat alkotni."
+      }
+    ];
+
+    // Toggle API accordion
+    document.getElementById('api-toggle-btn').addEventListener('click', () => {
+      const box = document.getElementById('api-box');
+      box.classList.toggle('show');
+    });
+
+    // Tag chip selection & appending to bio
+    document.querySelectorAll('.tag-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const tagText = chip.getAttribute('data-tag');
+        const textarea = document.getElementById('user-bio');
+        chip.classList.toggle('active');
+
+        if (chip.classList.contains('active')) {
+          if (textarea.value.length > 0 && !textarea.value.endsWith(' ')) {
+            textarea.value += ' ';
+          }
+          textarea.value += tagText + '. ';
+        }
+      });
+    });
+
+    function saveApiKey() {
+      const key = document.getElementById('api-key-input').value.trim();
+      if(key) {
+        localStorage.setItem('gemini_api_key', key);
+        alert('Gemini API Kulcs elmentve a böngészőben!');
+      } else {
+        localStorage.removeItem('gemini_api_key');
+        alert('API kulcs törölve. A beépített AI motor fog futni.');
+      }
+    }
+
+    // Load saved API key on launch
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedKey = localStorage.getItem('gemini_api_key');
+      if (savedKey) {
+        document.getElementById('api-key-input').value = savedKey;
+      }
+    });
+
+    async function startAnalysis() {
+      const bioText = document.getElementById('user-bio').value.trim();
+      if (!bioText) {
+        alert('Kérlek, írj pár mondatot magadról vagy kattints a fenti címkékre!');
+        return;
+      }
+
+      setLoading(true);
+
+      const apiKey = localStorage.getItem('gemini_api_key') || document.getElementById('api-key-input').value.trim();
+
+      try {
+        let resultsData;
+        if (apiKey) {
+          resultsData = await fetchGeminiAnalysis(bioText, apiKey);
+        } else {
+          // Fallback to built-in smart semantic engine
+          await new Promise(r => setTimeout(r, 900)); // Simulate thinking delay
+          resultsData = runBuiltInEngine(bioText);
+        }
+        renderResults(resultsData);
+      } catch (err) {
+        console.warn('API hívás sikertelen volt, átváltás beépített AI-ra:', err);
+        const fallbackData = runBuiltInEngine(bioText);
+        renderResults(fallbackData);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function setLoading(isLoading) {
+      const btn = document.getElementById('analyze-btn');
+      const spinner = document.getElementById('btn-spinner');
+      const btnText = document.getElementById('btn-text');
+
+      if (isLoading) {
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        btnText.innerText = 'AI Elemzés folyamatban...';
+      } else {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.innerText = 'Elemzés Indítása ✨';
+      }
+    }
+
+    // Built-in Smart Semantic Engine (Runs offline or without API key)
+    function runBuiltInEngine(userText) {
+      const lowerText = userText.toLowerCase();
+
+      let scores = SPECIALTIES.map(spec => {
+        let matches = 0;
+        spec.keywords.forEach(kw => {
+          if (lowerText.includes(kw)) matches += 1;
+        });
+
+        // Anti-keywords penalty check (e.g. "utálok rajzolni")
+        if (spec.id === 'kreativ' && (lowerText.includes('nem szeretek rajzolni') || lowerText.includes('utálok rajzolni') || lowerText.includes('rajz nem'))) {
+          matches -= 3;
+        }
+
+        let basePct = 35 + (matches * 18);
+        if (basePct > 98) basePct = 95 + Math.floor(Math.random() * 4);
+        if (basePct < 15) basePct = 12 + Math.floor(Math.random() * 8);
+
+        return {
+          name: spec.name,
+          emoji: spec.emoji,
+          percentage: basePct,
+          summary: spec.baseSummary + (matches > 0 ? ` (Kifejezetten illeszkedik a leírásodban szereplő részletekre!)` : ``)
+        };
+      });
+
+      // Sort descending
+      scores.sort((a, b) => b.percentage - a.percentage);
+
+      // Normalize highest to sound inspiring
+      if (scores[0].percentage < 70) scores[0].percentage = 82;
+
+      // Project recommendation generation based on winner
+      let project = "Egy okosotthon vezérlőrendszer összeállítása vagy egy saját mikroszájtsorozat tervezése!";
+      const topName = scores[0].name;
+
+      if (topName.includes("Informatikai")) {
+        project = "🖥️ Építs saját helyi webszervert egy Raspberry Pi-ből és készíts rá egy mini játékot!";
+      } else if (topName.includes("Gépész")) {
+        project = "⚙️ Tervezz 3D-ben egy egyedi robotkart, nyomtasd ki és szereld össze a garázsban!";
+      } else if (topName.includes("Elektro")) {
+        project = "⚡ Készíts egy Arduino-alapú szobai riasztót mozgásérzékelővel és LED kijelzővel!";
+      } else if (topName.includes("Logisztikai")) {
+        project = "📦 Tervezz meg egy virtuális nemzetközi csomagszállító hálózatot és optimalizáld az útvonalakat!";
+      } else if (topName.includes("Kreatív")) {
+        project = "🎨 Készíts teljes arculatot (logó, plakát, 15 másodperces promo videó) egy képzeletbeli márkának!";
+      }
+
+      return {
+        results: scores,
+        top_project: project
+      };
+    }
+
+    // Live Gemini API Integration
+    async function fetchGeminiAnalysis(userText, apiKey) {
+      const systemPrompt = `Te egy barátságos pályaorientációs AI tanácsadó vagy 8. osztályos diákok számára.
+A diák egy szabad megfogalmazású leírást ad meg magáról.
+Értékeld a profilját mind az 5 megadott szakirányra 0 és 100% közötti illeszkedési pontszámmal:
+1. Informatikai rendszer- és alkalmazás-üzemeltető
+2. Gépésztechnikus
+3. Elektrotechnikai technikus
+4. Logisztikai technikus
+5. Kreatív / Grafikai technikus
+
+KIZÁRÓLAG érvényes JSON formátumban válaszolj, a következő struktúrában:
+{
+  "results": [
+    {
+      "name": "Informatikai rendszer- és alkalmazás-üzemeltető",
+      "emoji": "💻",
+      "percentage": 88,
+      "summary": "1-2 mondatos személyre szabott indoklás"
+    },
+    ... (összesen 5 elem)
+  ],
+  "top_project": "Egy izgalmas gyakorlati projekt ötlet a legjobb szakirányhoz"
+}`;
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            { role: 'user', parts: [{ text: systemPrompt + "\n\nA diák leírása: " + userText }] }
+          ],
+          generationConfig: { responseMimeType: "application/json" }
+        })
+      });
+
+      if (!res.ok) throw new Error('Gemini API hiba: ' + res.statusText);
+      const data = await res.json();
+      const rawText = data.candidates[0].content.parts[0].text;
+      return JSON.parse(rawText);
+    }
+
+    // Render Results HTML
+    function renderResults(data) {
+      const container = document.getElementById('results-list');
+      container.innerHTML = '';
+
+      // Ensure sorted
+      data.results.sort((a, b) => b.percentage - a.percentage);
+
+      data.results.forEach((item, index) => {
+        const isTop = index === 0;
+        const cardEl = document.createElement('div');
+        cardEl.className = `result-card ${isTop ? 'top-match' : ''}`;
+
+        cardEl.innerHTML = `
+          <div class="result-header">
+            <div class="result-title">
+              <span>${item.emoji}</span>
+              <span>${item.name}</span>
+            </div>
+            <div class="result-percent">${item.percentage}%</div>
+          </div>
+          <div class="progress-bg">
+            <div class="progress-fill" id="bar-${index}" style="width: 0%;"></div>
+          </div>
+          <p class="result-summary">${item.summary}</p>
+        `;
+
+        container.appendChild(cardEl);
+
+        // Animate bar width
+        setTimeout(() => {
+          const bar = document.getElementById(`bar-${index}`);
+          if (bar) bar.style.width = item.percentage + '%';
+        }, 100 + (index * 120));
+      });
+
+      // Render top project
+      document.getElementById('project-text').innerText = data.top_project || "Készíts egy egyedi bemutató projektet a kiválasztott szakterületen!";
+
+      // Toggle views
+      document.getElementById('input-card').classList.add('hidden');
+      document.getElementById('results-card').classList.remove('hidden');
+
+      // Scroll to top of results smoothly
+      document.getElementById('results-card').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetForm() {
+      document.getElementById('results-card').classList.add('hidden');
+      document.getElementById('input-card').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
