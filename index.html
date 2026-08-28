@@ -749,8 +749,8 @@ function stopTimer() {
 // const GROQ_API_KEY = "IDE_ÍRD_A_GROQ_API_KULCSODAT";
 
 async function fetchOllamaAnalysis(userText, apiKey) {
-  const systemPrompt = `Te egy magyar pályaorientációs AI tanácsadó vagy 8. osztályosoknak.
-Értékeld a diák érdeklődését a 4 megadott szakmára (0-100% közötti skálán), és írj mindegyikhez 1 mondatos, természetes, barátságos magyar indoklást.
+const systemPrompt = `Te egy magyar pályaorientációs AI tanácsadó vagy 8. osztályosoknak.
+Értékeld a diák érdeklődését a 4 megadott szakmára, és írj mindegyikhez 1 mondatos, természetes, barátságos magyar indoklást.
 
 SZAKMAI BEOSZTÁS ÉS KULCSSZAVAK:
 - Informatikai rendszer- és alkalmazás-üzemeltető: PC hardver, szerelés, hálózat, Linux, szerverek, IT biztonság.
@@ -758,10 +758,20 @@ SZAKMAI BEOSZTÁS ÉS KULCSSZAVAK:
 - Automatikai technikus: robotika, szerelés, automatizálás, szenzorok, gyári vezérlés, PLC.
 - Szoftverfejlesztő és tesztelő: programozás, kódolás, szoftverek, appok, játékfejlesztés, Python, HTML.
 
-PONTOZÁSI SZABÁLYOK:
-1. Ha a diák NEM említi a kódolást vagy programozást, a Szoftverfejlesztő ne kapjon többet 40%-nál!
-2. A diák által leginkább leírt terület kapja a legmagasabb pontszámot (85-95%).
-3. Minden szakmához a diák szavaira reagáló, egyedi indoklást írj! Kerüld a sablonszövegeket!
+SZIGORÚ RANGSOROLÁSI ÉS PONTOZÁSI SZABÁLYOK:
+1. TILOS UGYANAZT A SZÁZALÉKOT ADNI TÖBB SZAKMÁRA! Mind a 4 szakmának eltérő pontot kell kapnia.
+2. Használj 4 szintű dinamikus pontozást a diák szövege alapján:
+   - 1. helyezett (Elsődleges érdeklődés): 85% – 95%
+   - 2. helyezett (Közvetve kapcsolódó terület): 55% – 70%
+   - 3. helyezett (Gyengén kapcsolódó terület): 30% – 45%
+   - 4. helyezett (Legkevésbé illeszkedő terület): 10% – 25%
+
+PÉLDA DIFFERENCIÁLÁSRA:
+Ha a diák "PC szerelést és fizika méréseket" említ:
+- Rendszerüzemeltető: 90% (közvetlen találat)
+- Erősáram: 65% (fizika/mérések miatt jó 2. helyezett)
+- Automatika: 40% (szerelés miatt gyengén kapcsolódik)
+- Szoftverfejlesztő: 15% (mivel nem említett kódolást)
 
 KIZÁRÓLAG az alábbi JSON szerkezetben válaszolj:
 {
@@ -793,7 +803,6 @@ KIZÁRÓLAG az alábbi JSON szerkezetben válaszolj:
   ],
   "top_project": "Gyakorlati projektötlet a győztes szakmához"
 }`;
-
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
