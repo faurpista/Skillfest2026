@@ -732,7 +732,7 @@ function stopTimer() {
         let resultsData;
         if (apiKey) {
         //  resultsData = await fetchOllamaAnalysis(bioText, apiKey);
-          resultsData = awaitfetchGeminiAnalysis(bioText, apiKey) 
+          resultsData = await fetchGeminiAnalysis(bioText, apiKey) 
         } else {
           // Fallback to built-in smart semantic engine
           await new Promise(r => setTimeout(r, 900)); // Simulate thinking delay
