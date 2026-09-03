@@ -964,7 +964,7 @@ KIZÁRÓLAG érvényes JSON formátumban válaszolj, a következő struktúrába
   "top_project": "Egy izgalmas gyakorlati projekt ötlet a legjobb szakirányhoz"
 }`;
  console.log("Küldött prompt:", systemPrompt);
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
 
       const res = await fetch(url, {
         method: 'POST',
